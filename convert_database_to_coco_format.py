@@ -222,7 +222,7 @@ def main(debug=False, save_images=False):
                     fold_number = get_fold_number_based_on_frame_idx(cam_frame_idx)
                     image = get_coco_image_based_on_frame(global_image_idx, cam_frame_idx, cam_name, fold_number, frame)
                     coco_images.append(image)
-                    save_coco_image(image, global_image_idx, save_images)
+                    save_coco_image(frame, global_image_idx, save_images)
 
                     frame_annotations = get_frame_annotations(annotations_idx, global_image_idx, video_frame_idx, annotations)
                     if frame_annotations is not None:
