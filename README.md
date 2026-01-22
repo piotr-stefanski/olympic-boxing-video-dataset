@@ -27,3 +27,8 @@ Project was created to prepare dataset for training object detection models and 
 To prepare benchamrk we have access to the ACK Cyfronet datacenter, especially to the Athena cluster (https://docs.cyfronet.pl/spaces/~plgpawlik/pages/126648338/Athena). Basically we start running training only on one node which offer access to the up to 8 Nvidia A100 GPUs.
 
 So the code being prepared need to be well optimized in every stage. We have access to the fast GPU, so reading and encoding images from disk and load it to the GPU need be fast. As we already tested the "standard" Pytorch DataLoader is not enought and cannot keep up with delivering data to the GPU, resulting in the graphics card being used at 50/60% capacity.
+
+## Plan of implementation
+Firstly we want to implement the training pipeline on our own to have full control about such process. The library under consideration for this is PyTorch.
+
+After that we consider using MMdetection (https://github.com/open-mmlab/mmdetection) to process whole benchmark.
