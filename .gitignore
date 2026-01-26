@@ -2,3 +2,5 @@
 database
 __pycache__
 .DS_Store
+output
+nohup.out
