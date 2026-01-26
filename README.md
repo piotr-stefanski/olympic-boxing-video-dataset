@@ -48,6 +48,38 @@ uv run python train.py --dry_run --print_model
 ```
 This runs one iteration to verify the full pipeline works.
 
+# Training with SLURM Batch Jobs
+
+## Submit a training job
+```bash
+sbatch train_fold1.sbatch
+```
+
+## Check your queued/running jobs
+```bash
+squeue -u $USER
+```
+
+## Check job status with more details
+```bash
+squeue -u $USER --format="%.10i %.15j %.8T %.10M %.9l %.6D %R"
+```
+
+## View job history and efficiency
+```bash
+hpc-jobs-history
+```
+
+## Cancel a job
+```bash
+scancel <job_id>
+```
+
+## Monitor job output in real-time
+```bash
+tail -f train_fold1_<job_id>.log
+```
+
 # The main objective of the projekt
 Project was created to prepare dataset for training object detection models and also prepare code to train such models. There are plans to train several models and compare their performance. In the beginning we will start with the state of the art models like R-CNN, YOLO etc.
 
