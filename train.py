@@ -383,14 +383,14 @@ def main():
         writer.add_scalar("LR/learning_rate", scheduler.get_last_lr()[0], epoch)
         
         # Validate
-        if not args.dry_run:
-            validate(
-                model=model,
-                data_loader=val_loader,
-                device=device,
-                epoch=epoch,
-                writer=writer
-            )
+        # if not args.dry_run and epoch % 10 == 0:
+            # validate(
+            #     model=model,
+            #     data_loader=val_loader,
+            #     device=device,
+            #     epoch=epoch,
+            #     writer=writer
+            # )
         
         # Save checkpoint
         is_best = train_losses["total_loss"] < best_loss
@@ -411,6 +411,15 @@ def main():
         if args.dry_run:
             print("[DRY RUN] Stopping after one epoch")
             break
+    
+    # Validate
+    validate(
+        model=model,
+        data_loader=val_loader,
+        device=device,
+        epoch=epoch,
+        writer=writer
+    )
     
     writer.close()
     print(f"\n[INFO] Training complete!")

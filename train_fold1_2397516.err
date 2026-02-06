@@ -1,0 +1,21 @@
+/net/tscratch/people/plgpiotrstefanski/projects/olympic-boxing-video-dataset/.venv/lib/python3.13/site-packages/nvidia/dali/backend.py:97: Warning: Python 3.13 support is experimental and not officially tested.
+  deprecation_warning("Python 3.13 support is experimental and not officially tested.")
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+[/opt/dali/dali/util/nvml.cc:154] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity
+slurmstepd: error: *** JOB 2397516 ON t0019 CANCELLED AT 2026-01-26T23:14:32 DUE TO TIME LIMIT ***

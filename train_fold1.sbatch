@@ -2,10 +2,10 @@
 #SBATCH --job-name=train_fold1
 #SBATCH --partition=plgrid-gpu-a100
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=1
 #SBATCH --gpus=1
 #SBATCH --mem=8GB
-#SBATCH --time=01:00:00
+#SBATCH --time=10:00:00
 #SBATCH --output=train_fold1_%j.log
 #SBATCH --error=train_fold1_%j.err
 

@@ -1,0 +1,397 @@
+Job started at: Mon Jan 26 21:14:12 CET 2026
+Running on node: t0019
+Job ID: 2397516
+Mon Jan 26 21:14:12 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.195.03             Driver Version: 570.195.03     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A100-SXM4-40GB          On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   23C    P0             50W /  400W |       0MiB /  40960MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+[INFO] Using GPU: NVIDIA A100-SXM4-40GB
+[INFO] GPU Memory: 42.60 GB
+
+============================================================
+TRAINING CONFIGURATION
+============================================================
+Train folds: [1]
+Validation fold: [5]
+Epochs: 10
+Batch size: 32
+Learning rate: 0.005
+Output directory: output
+============================================================
+
+[INFO] Creating DALI data loaders...
+[INFO] DALIBoxingLoader initialized with 51414 images from folds [1]
+[INFO] Number of classes: 8
+[INFO] DALIBoxingLoader initialized with 57293 images from folds [5]
+[INFO] Number of classes: 8
+[INFO] Creating model...
+
+[INFO] Starting training from epoch 0 to 10
+[INFO] TensorBoard logs at: output/runs/20260126_211425
+
+============================================================
+EPOCH 1/10
+============================================================
+Epoch [0] Batch [0/1607] Loss: 2.3805 LR: 0.005000 Time: 3.8s
+Epoch [0] Batch [10/1607] Loss: 0.0421 LR: 0.005000 Time: 18.3s
+Epoch [0] Batch [20/1607] Loss: 0.0353 LR: 0.005000 Time: 36.7s
+Epoch [0] Batch [30/1607] Loss: 0.1306 LR: 0.005000 Time: 55.2s
+Epoch [0] Batch [40/1607] Loss: 0.0328 LR: 0.005000 Time: 73.7s
+Epoch [0] Batch [50/1607] Loss: 0.0293 LR: 0.005000 Time: 92.2s
+Epoch [0] Batch [60/1607] Loss: 0.0011 LR: 0.005000 Time: 110.8s
+Epoch [0] Batch [70/1607] Loss: 0.0028 LR: 0.005000 Time: 129.3s
+Epoch [0] Batch [80/1607] Loss: 0.0020 LR: 0.005000 Time: 147.9s
+Epoch [0] Batch [90/1607] Loss: 0.0369 LR: 0.005000 Time: 166.4s
+Epoch [0] Batch [100/1607] Loss: 0.0250 LR: 0.005000 Time: 185.0s
+Epoch [0] Batch [110/1607] Loss: 0.0130 LR: 0.005000 Time: 203.4s
+Epoch [0] Batch [120/1607] Loss: 0.0236 LR: 0.005000 Time: 222.1s
+Epoch [0] Batch [130/1607] Loss: 0.0143 LR: 0.005000 Time: 240.7s
+Epoch [0] Batch [140/1607] Loss: 0.0346 LR: 0.005000 Time: 259.3s
+Epoch [0] Batch [150/1607] Loss: 0.0446 LR: 0.005000 Time: 277.9s
+Epoch [0] Batch [160/1607] Loss: 0.0388 LR: 0.005000 Time: 296.4s
+Epoch [0] Batch [170/1607] Loss: 0.0099 LR: 0.005000 Time: 315.0s
+Epoch [0] Batch [180/1607] Loss: 0.0208 LR: 0.005000 Time: 333.4s
+Epoch [0] Batch [190/1607] Loss: 0.0167 LR: 0.005000 Time: 352.1s
+Epoch [0] Batch [200/1607] Loss: 0.0539 LR: 0.005000 Time: 370.7s
+Epoch [0] Batch [210/1607] Loss: 0.0183 LR: 0.005000 Time: 389.3s
+Epoch [0] Batch [220/1607] Loss: 0.0363 LR: 0.005000 Time: 407.9s
+Epoch [0] Batch [230/1607] Loss: 0.0226 LR: 0.005000 Time: 426.5s
+Epoch [0] Batch [240/1607] Loss: 0.0131 LR: 0.005000 Time: 445.1s
+Epoch [0] Batch [250/1607] Loss: 0.0115 LR: 0.005000 Time: 463.7s
+Epoch [0] Batch [260/1607] Loss: 0.0022 LR: 0.005000 Time: 482.3s
+Epoch [0] Batch [270/1607] Loss: 0.0576 LR: 0.005000 Time: 500.9s
+Epoch [0] Batch [280/1607] Loss: 0.0324 LR: 0.005000 Time: 519.5s
+Epoch [0] Batch [290/1607] Loss: 0.0538 LR: 0.005000 Time: 538.0s
+Epoch [0] Batch [300/1607] Loss: 0.0283 LR: 0.005000 Time: 556.6s
+Epoch [0] Batch [310/1607] Loss: 0.0162 LR: 0.005000 Time: 575.1s
+Epoch [0] Batch [320/1607] Loss: 0.0357 LR: 0.005000 Time: 593.6s
+Epoch [0] Batch [330/1607] Loss: 0.0542 LR: 0.005000 Time: 612.3s
+Epoch [0] Batch [340/1607] Loss: 0.0306 LR: 0.005000 Time: 630.9s
+Epoch [0] Batch [350/1607] Loss: 0.0385 LR: 0.005000 Time: 649.4s
+Epoch [0] Batch [360/1607] Loss: 0.0259 LR: 0.005000 Time: 668.0s
+Epoch [0] Batch [370/1607] Loss: 0.0097 LR: 0.005000 Time: 686.6s
+Epoch [0] Batch [380/1607] Loss: 0.0020 LR: 0.005000 Time: 705.2s
+Epoch [0] Batch [390/1607] Loss: 0.0320 LR: 0.005000 Time: 723.8s
+Epoch [0] Batch [400/1607] Loss: 0.0022 LR: 0.005000 Time: 742.4s
+Epoch [0] Batch [410/1607] Loss: 0.0020 LR: 0.005000 Time: 760.9s
+Epoch [0] Batch [420/1607] Loss: 0.0022 LR: 0.005000 Time: 779.5s
+Epoch [0] Batch [430/1607] Loss: 0.0236 LR: 0.005000 Time: 798.0s
+Epoch [0] Batch [440/1607] Loss: 0.0105 LR: 0.005000 Time: 816.6s
+Epoch [0] Batch [450/1607] Loss: 0.0569 LR: 0.005000 Time: 835.2s
+Epoch [0] Batch [460/1607] Loss: 0.0279 LR: 0.005000 Time: 853.7s
+Epoch [0] Batch [470/1607] Loss: 0.0281 LR: 0.005000 Time: 872.2s
+Epoch [0] Batch [480/1607] Loss: 0.0090 LR: 0.005000 Time: 890.8s
+Epoch [0] Batch [490/1607] Loss: 0.0189 LR: 0.005000 Time: 909.4s
+Epoch [0] Batch [500/1607] Loss: 0.0500 LR: 0.005000 Time: 928.0s
+Epoch [0] Batch [510/1607] Loss: 0.0234 LR: 0.005000 Time: 946.6s
+Epoch [0] Batch [520/1607] Loss: 0.0528 LR: 0.005000 Time: 965.3s
+Epoch [0] Batch [530/1607] Loss: 0.0248 LR: 0.005000 Time: 983.9s
+Epoch [0] Batch [540/1607] Loss: 0.0017 LR: 0.005000 Time: 1002.5s
+Epoch [0] Batch [550/1607] Loss: 0.0025 LR: 0.005000 Time: 1021.0s
+Epoch [0] Batch [560/1607] Loss: 0.0255 LR: 0.005000 Time: 1039.6s
+Epoch [0] Batch [570/1607] Loss: 0.0238 LR: 0.005000 Time: 1058.2s
+Epoch [0] Batch [580/1607] Loss: 0.0242 LR: 0.005000 Time: 1076.8s
+Epoch [0] Batch [590/1607] Loss: 0.0361 LR: 0.005000 Time: 1095.4s
+Epoch [0] Batch [600/1607] Loss: 0.0393 LR: 0.005000 Time: 1114.0s
+Epoch [0] Batch [610/1607] Loss: 0.0113 LR: 0.005000 Time: 1132.5s
+Epoch [0] Batch [620/1607] Loss: 0.0417 LR: 0.005000 Time: 1151.1s
+Epoch [0] Batch [630/1607] Loss: 0.0038 LR: 0.005000 Time: 1169.7s
+Epoch [0] Batch [640/1607] Loss: 0.0012 LR: 0.005000 Time: 1188.3s
+Epoch [0] Batch [650/1607] Loss: 0.0102 LR: 0.005000 Time: 1206.7s
+Epoch [0] Batch [660/1607] Loss: 0.0041 LR: 0.005000 Time: 1225.1s
+Epoch [0] Batch [670/1607] Loss: 0.0163 LR: 0.005000 Time: 1243.5s
+Epoch [0] Batch [680/1607] Loss: 0.0434 LR: 0.005000 Time: 1261.9s
+Epoch [0] Batch [690/1607] Loss: 0.0084 LR: 0.005000 Time: 1280.3s
+Epoch [0] Batch [700/1607] Loss: 0.0158 LR: 0.005000 Time: 1298.7s
+Epoch [0] Batch [710/1607] Loss: 0.0114 LR: 0.005000 Time: 1317.1s
+Epoch [0] Batch [720/1607] Loss: 0.0547 LR: 0.005000 Time: 1335.5s
+Epoch [0] Batch [730/1607] Loss: 0.0112 LR: 0.005000 Time: 1353.9s
+Epoch [0] Batch [740/1607] Loss: 0.0191 LR: 0.005000 Time: 1372.3s
+Epoch [0] Batch [750/1607] Loss: 0.0362 LR: 0.005000 Time: 1390.7s
+Epoch [0] Batch [760/1607] Loss: 0.0081 LR: 0.005000 Time: 1409.1s
+Epoch [0] Batch [770/1607] Loss: 0.0275 LR: 0.005000 Time: 1427.5s
+Epoch [0] Batch [780/1607] Loss: 0.0053 LR: 0.005000 Time: 1445.9s
+Epoch [0] Batch [790/1607] Loss: 0.0100 LR: 0.005000 Time: 1464.3s
+Epoch [0] Batch [800/1607] Loss: 0.0018 LR: 0.005000 Time: 1482.6s
+Epoch [0] Batch [810/1607] Loss: 0.0522 LR: 0.005000 Time: 1501.0s
+Epoch [0] Batch [820/1607] Loss: 0.0100 LR: 0.005000 Time: 1519.4s
+Epoch [0] Batch [830/1607] Loss: 0.0496 LR: 0.005000 Time: 1537.7s
+Epoch [0] Batch [840/1607] Loss: 0.0183 LR: 0.005000 Time: 1556.1s
+Epoch [0] Batch [850/1607] Loss: 0.0451 LR: 0.005000 Time: 1574.5s
+Epoch [0] Batch [860/1607] Loss: 0.0566 LR: 0.005000 Time: 1592.9s
+Epoch [0] Batch [870/1607] Loss: 0.0026 LR: 0.005000 Time: 1611.3s
+Epoch [0] Batch [880/1607] Loss: 0.0693 LR: 0.005000 Time: 1629.7s
+Epoch [0] Batch [890/1607] Loss: 0.0301 LR: 0.005000 Time: 1648.2s
+Epoch [0] Batch [900/1607] Loss: 0.0070 LR: 0.005000 Time: 1666.6s
+Epoch [0] Batch [910/1607] Loss: 0.0311 LR: 0.005000 Time: 1685.0s
+Epoch [0] Batch [920/1607] Loss: 0.0184 LR: 0.005000 Time: 1703.4s
+Epoch [0] Batch [930/1607] Loss: 0.0313 LR: 0.005000 Time: 1721.7s
+Epoch [0] Batch [940/1607] Loss: 0.0357 LR: 0.005000 Time: 1740.1s
+Epoch [0] Batch [950/1607] Loss: 0.0303 LR: 0.005000 Time: 1758.5s
+Epoch [0] Batch [960/1607] Loss: 0.0299 LR: 0.005000 Time: 1777.5s
+Epoch [0] Batch [970/1607] Loss: 0.0312 LR: 0.005000 Time: 1795.9s
+Epoch [0] Batch [980/1607] Loss: 0.0772 LR: 0.005000 Time: 1814.3s
+Epoch [0] Batch [990/1607] Loss: 0.0215 LR: 0.005000 Time: 1832.6s
+Epoch [0] Batch [1000/1607] Loss: 0.0569 LR: 0.005000 Time: 1851.0s
+Epoch [0] Batch [1010/1607] Loss: 0.0129 LR: 0.005000 Time: 1869.3s
+Epoch [0] Batch [1020/1607] Loss: 0.0136 LR: 0.005000 Time: 1887.6s
+Epoch [0] Batch [1030/1607] Loss: 0.0129 LR: 0.005000 Time: 1906.0s
+Epoch [0] Batch [1040/1607] Loss: 0.0218 LR: 0.005000 Time: 1924.3s
+Epoch [0] Batch [1050/1607] Loss: 0.0185 LR: 0.005000 Time: 1942.7s
+Epoch [0] Batch [1060/1607] Loss: 0.0177 LR: 0.005000 Time: 1961.1s
+Epoch [0] Batch [1070/1607] Loss: 0.0280 LR: 0.005000 Time: 1979.5s
+Epoch [0] Batch [1080/1607] Loss: 0.0163 LR: 0.005000 Time: 1997.8s
+Epoch [0] Batch [1090/1607] Loss: 0.0382 LR: 0.005000 Time: 2016.2s
+Epoch [0] Batch [1100/1607] Loss: 0.0397 LR: 0.005000 Time: 2034.5s
+Epoch [0] Batch [1110/1607] Loss: 0.0022 LR: 0.005000 Time: 2052.8s
+Epoch [0] Batch [1120/1607] Loss: 0.0329 LR: 0.005000 Time: 2071.2s
+Epoch [0] Batch [1130/1607] Loss: 0.0014 LR: 0.005000 Time: 2089.5s
+Epoch [0] Batch [1140/1607] Loss: 0.0019 LR: 0.005000 Time: 2107.9s
+Epoch [0] Batch [1150/1607] Loss: 0.0287 LR: 0.005000 Time: 2126.2s
+Epoch [0] Batch [1160/1607] Loss: 0.0531 LR: 0.005000 Time: 2144.6s
+Epoch [0] Batch [1170/1607] Loss: 0.0164 LR: 0.005000 Time: 2163.0s
+Epoch [0] Batch [1180/1607] Loss: 0.0433 LR: 0.005000 Time: 2181.4s
+Epoch [0] Batch [1190/1607] Loss: 0.0078 LR: 0.005000 Time: 2199.7s
+Epoch [0] Batch [1200/1607] Loss: 0.0378 LR: 0.005000 Time: 2218.0s
+Epoch [0] Batch [1210/1607] Loss: 0.0295 LR: 0.005000 Time: 2236.4s
+Epoch [0] Batch [1220/1607] Loss: 0.0210 LR: 0.005000 Time: 2254.7s
+Epoch [0] Batch [1230/1607] Loss: 0.0322 LR: 0.005000 Time: 2273.0s
+Epoch [0] Batch [1240/1607] Loss: 0.0199 LR: 0.005000 Time: 2291.3s
+Epoch [0] Batch [1250/1607] Loss: 0.0049 LR: 0.005000 Time: 2309.7s
+Epoch [0] Batch [1260/1607] Loss: 0.0193 LR: 0.005000 Time: 2328.0s
+Epoch [0] Batch [1270/1607] Loss: 0.0160 LR: 0.005000 Time: 2346.3s
+Epoch [0] Batch [1280/1607] Loss: 0.0290 LR: 0.005000 Time: 2364.6s
+Epoch [0] Batch [1290/1607] Loss: 0.0320 LR: 0.005000 Time: 2383.0s
+Epoch [0] Batch [1300/1607] Loss: 0.0013 LR: 0.005000 Time: 2401.2s
+Epoch [0] Batch [1310/1607] Loss: 0.0223 LR: 0.005000 Time: 2419.6s
+Epoch [0] Batch [1320/1607] Loss: 0.0452 LR: 0.005000 Time: 2437.9s
+Epoch [0] Batch [1330/1607] Loss: 0.0123 LR: 0.005000 Time: 2456.2s
+Epoch [0] Batch [1340/1607] Loss: 0.0102 LR: 0.005000 Time: 2474.5s
+Epoch [0] Batch [1350/1607] Loss: 0.0083 LR: 0.005000 Time: 2492.9s
+Epoch [0] Batch [1360/1607] Loss: 0.0126 LR: 0.005000 Time: 2511.2s
+Epoch [0] Batch [1370/1607] Loss: 0.0105 LR: 0.005000 Time: 2529.5s
+Epoch [0] Batch [1380/1607] Loss: 0.0340 LR: 0.005000 Time: 2547.8s
+Epoch [0] Batch [1390/1607] Loss: 0.0250 LR: 0.005000 Time: 2566.2s
+Epoch [0] Batch [1400/1607] Loss: 0.0645 LR: 0.005000 Time: 2584.5s
+Epoch [0] Batch [1410/1607] Loss: 0.0194 LR: 0.005000 Time: 2602.8s
+Epoch [0] Batch [1420/1607] Loss: 0.0182 LR: 0.005000 Time: 2621.2s
+Epoch [0] Batch [1430/1607] Loss: 0.0148 LR: 0.005000 Time: 2639.5s
+Epoch [0] Batch [1440/1607] Loss: 0.0218 LR: 0.005000 Time: 2657.9s
+Epoch [0] Batch [1450/1607] Loss: 0.0442 LR: 0.005000 Time: 2676.2s
+Epoch [0] Batch [1460/1607] Loss: 0.0506 LR: 0.005000 Time: 2694.6s
+Epoch [0] Batch [1470/1607] Loss: 0.0606 LR: 0.005000 Time: 2712.9s
+Epoch [0] Batch [1480/1607] Loss: 0.0222 LR: 0.005000 Time: 2731.3s
+Epoch [0] Batch [1490/1607] Loss: 0.0314 LR: 0.005000 Time: 2749.6s
+Epoch [0] Batch [1500/1607] Loss: 0.0191 LR: 0.005000 Time: 2767.9s
+Epoch [0] Batch [1510/1607] Loss: 0.0328 LR: 0.005000 Time: 2786.3s
+Epoch [0] Batch [1520/1607] Loss: 0.0012 LR: 0.005000 Time: 2804.6s
+Epoch [0] Batch [1530/1607] Loss: 0.0332 LR: 0.005000 Time: 2823.0s
+Epoch [0] Batch [1540/1607] Loss: 0.0456 LR: 0.005000 Time: 2841.3s
+Epoch [0] Batch [1550/1607] Loss: 0.0277 LR: 0.005000 Time: 2859.6s
+Epoch [0] Batch [1560/1607] Loss: 0.0211 LR: 0.005000 Time: 2877.9s
+Epoch [0] Batch [1570/1607] Loss: 0.0527 LR: 0.005000 Time: 2896.3s
+Epoch [0] Batch [1580/1607] Loss: 0.0454 LR: 0.005000 Time: 2914.6s
+Epoch [0] Batch [1590/1607] Loss: 0.0143 LR: 0.005000 Time: 2932.9s
+Epoch [0] Batch [1600/1607] Loss: 0.0448 LR: 0.005000 Time: 2951.2s
+Validation batch [0/1791]
+Validation batch [50/1791]
+Validation batch [100/1791]
+Validation batch [150/1791]
+Validation batch [200/1791]
+Validation batch [250/1791]
+Validation batch [300/1791]
+Validation batch [350/1791]
+Validation batch [400/1791]
+Validation batch [450/1791]
+Validation batch [500/1791]
+Validation batch [550/1791]
+Validation batch [600/1791]
+Validation batch [650/1791]
+Validation batch [700/1791]
+Validation batch [750/1791]
+Validation batch [800/1791]
+Validation batch [850/1791]
+Validation batch [900/1791]
+Validation batch [950/1791]
+Validation batch [1000/1791]
+Validation batch [1050/1791]
+Validation batch [1100/1791]
+Validation batch [1150/1791]
+Validation batch [1200/1791]
+Validation batch [1250/1791]
+Validation batch [1300/1791]
+Validation batch [1350/1791]
+Validation batch [1400/1791]
+Validation batch [1450/1791]
+Validation batch [1500/1791]
+Validation batch [1550/1791]
+Validation batch [1600/1791]
+Validation batch [1650/1791]
+Validation batch [1700/1791]
+Validation batch [1750/1791]
+Validation: 57312 images, 0 high-conf detections, avg 0.00 per image
+[INFO] Saved checkpoint: output/checkpoint_epoch_0.pth
+[INFO] Saved best checkpoint: output/checkpoint_best.pth
+
+============================================================
+EPOCH 2/10
+============================================================
+Epoch [1] Batch [0/1607] Loss: 0.0299 LR: 0.005000 Time: 2.1s
+Epoch [1] Batch [10/1607] Loss: 0.0654 LR: 0.005000 Time: 21.2s
+Epoch [1] Batch [20/1607] Loss: 0.0429 LR: 0.005000 Time: 40.2s
+Epoch [1] Batch [30/1607] Loss: 0.0024 LR: 0.005000 Time: 59.1s
+Epoch [1] Batch [40/1607] Loss: 0.0320 LR: 0.005000 Time: 78.0s
+Epoch [1] Batch [50/1607] Loss: 0.0308 LR: 0.005000 Time: 96.9s
+Epoch [1] Batch [60/1607] Loss: 0.0162 LR: 0.005000 Time: 115.9s
+Epoch [1] Batch [70/1607] Loss: 0.0181 LR: 0.005000 Time: 134.7s
+Epoch [1] Batch [80/1607] Loss: 0.0033 LR: 0.005000 Time: 153.6s
+Epoch [1] Batch [90/1607] Loss: 0.0152 LR: 0.005000 Time: 172.5s
+Epoch [1] Batch [100/1607] Loss: 0.0148 LR: 0.005000 Time: 191.4s
+Epoch [1] Batch [110/1607] Loss: 0.0635 LR: 0.005000 Time: 210.3s
+Epoch [1] Batch [120/1607] Loss: 0.0137 LR: 0.005000 Time: 229.2s
+Epoch [1] Batch [130/1607] Loss: 0.0579 LR: 0.005000 Time: 248.1s
+Epoch [1] Batch [140/1607] Loss: 0.0122 LR: 0.005000 Time: 267.1s
+Epoch [1] Batch [150/1607] Loss: 0.0255 LR: 0.005000 Time: 286.0s
+Epoch [1] Batch [160/1607] Loss: 0.0179 LR: 0.005000 Time: 304.8s
+Epoch [1] Batch [170/1607] Loss: 0.0454 LR: 0.005000 Time: 323.8s
+Epoch [1] Batch [180/1607] Loss: 0.0250 LR: 0.005000 Time: 342.7s
+Epoch [1] Batch [190/1607] Loss: 0.0286 LR: 0.005000 Time: 361.6s
+Epoch [1] Batch [200/1607] Loss: 0.0105 LR: 0.005000 Time: 380.6s
+Epoch [1] Batch [210/1607] Loss: 0.0072 LR: 0.005000 Time: 399.5s
+Epoch [1] Batch [220/1607] Loss: 0.0491 LR: 0.005000 Time: 418.4s
+Epoch [1] Batch [230/1607] Loss: 0.0139 LR: 0.005000 Time: 437.4s
+Epoch [1] Batch [240/1607] Loss: 0.0102 LR: 0.005000 Time: 456.3s
+Epoch [1] Batch [250/1607] Loss: 0.0251 LR: 0.005000 Time: 475.3s
+Epoch [1] Batch [260/1607] Loss: 0.0018 LR: 0.005000 Time: 494.1s
+Epoch [1] Batch [270/1607] Loss: 0.0031 LR: 0.005000 Time: 513.0s
+Epoch [1] Batch [280/1607] Loss: 0.0241 LR: 0.005000 Time: 532.0s
+Epoch [1] Batch [290/1607] Loss: 0.0451 LR: 0.005000 Time: 550.9s
+Epoch [1] Batch [300/1607] Loss: 0.0415 LR: 0.005000 Time: 569.8s
+Epoch [1] Batch [310/1607] Loss: 0.0209 LR: 0.005000 Time: 588.7s
+Epoch [1] Batch [320/1607] Loss: 0.0128 LR: 0.005000 Time: 607.7s
+Epoch [1] Batch [330/1607] Loss: 0.0124 LR: 0.005000 Time: 626.6s
+Epoch [1] Batch [340/1607] Loss: 0.0568 LR: 0.005000 Time: 645.5s
+Epoch [1] Batch [350/1607] Loss: 0.0113 LR: 0.005000 Time: 664.4s
+Epoch [1] Batch [360/1607] Loss: 0.0122 LR: 0.005000 Time: 683.1s
+Epoch [1] Batch [370/1607] Loss: 0.0223 LR: 0.005000 Time: 702.0s
+Epoch [1] Batch [380/1607] Loss: 0.0491 LR: 0.005000 Time: 720.9s
+Epoch [1] Batch [390/1607] Loss: 0.0238 LR: 0.005000 Time: 739.8s
+Epoch [1] Batch [400/1607] Loss: 0.0017 LR: 0.005000 Time: 758.6s
+Epoch [1] Batch [410/1607] Loss: 0.0274 LR: 0.005000 Time: 777.6s
+Epoch [1] Batch [420/1607] Loss: 0.0254 LR: 0.005000 Time: 796.5s
+Epoch [1] Batch [430/1607] Loss: 0.0028 LR: 0.005000 Time: 815.4s
+Epoch [1] Batch [440/1607] Loss: 0.0246 LR: 0.005000 Time: 834.2s
+Epoch [1] Batch [450/1607] Loss: 0.0197 LR: 0.005000 Time: 853.1s
+Epoch [1] Batch [460/1607] Loss: 0.0452 LR: 0.005000 Time: 872.0s
+Epoch [1] Batch [470/1607] Loss: 0.0599 LR: 0.005000 Time: 890.9s
+Epoch [1] Batch [480/1607] Loss: 0.0653 LR: 0.005000 Time: 909.7s
+Epoch [1] Batch [490/1607] Loss: 0.0238 LR: 0.005000 Time: 928.5s
+Epoch [1] Batch [500/1607] Loss: 0.0151 LR: 0.005000 Time: 947.4s
+Epoch [1] Batch [510/1607] Loss: 0.0402 LR: 0.005000 Time: 966.3s
+Epoch [1] Batch [520/1607] Loss: 0.0194 LR: 0.005000 Time: 985.2s
+Epoch [1] Batch [530/1607] Loss: 0.1004 LR: 0.005000 Time: 1004.1s
+Epoch [1] Batch [540/1607] Loss: 0.0256 LR: 0.005000 Time: 1023.0s
+Epoch [1] Batch [550/1607] Loss: 0.0089 LR: 0.005000 Time: 1041.9s
+Epoch [1] Batch [560/1607] Loss: 0.0016 LR: 0.005000 Time: 1060.8s
+Epoch [1] Batch [570/1607] Loss: 0.0036 LR: 0.005000 Time: 1079.7s
+Epoch [1] Batch [580/1607] Loss: 0.0022 LR: 0.005000 Time: 1098.6s
+Epoch [1] Batch [590/1607] Loss: 0.0169 LR: 0.005000 Time: 1117.5s
+Epoch [1] Batch [600/1607] Loss: 0.0280 LR: 0.005000 Time: 1136.4s
+Epoch [1] Batch [610/1607] Loss: 0.0345 LR: 0.005000 Time: 1155.3s
+Epoch [1] Batch [620/1607] Loss: 0.0182 LR: 0.005000 Time: 1174.1s
+Epoch [1] Batch [630/1607] Loss: 0.0110 LR: 0.005000 Time: 1193.0s
+Epoch [1] Batch [640/1607] Loss: 0.0165 LR: 0.005000 Time: 1211.9s
+Epoch [1] Batch [650/1607] Loss: 0.0664 LR: 0.005000 Time: 1230.8s
+Epoch [1] Batch [660/1607] Loss: 0.0231 LR: 0.005000 Time: 1249.7s
+Epoch [1] Batch [670/1607] Loss: 0.0397 LR: 0.005000 Time: 1268.6s
+Epoch [1] Batch [680/1607] Loss: 0.0114 LR: 0.005000 Time: 1287.5s
+Epoch [1] Batch [690/1607] Loss: 0.0224 LR: 0.005000 Time: 1306.4s
+Epoch [1] Batch [700/1607] Loss: 0.0472 LR: 0.005000 Time: 1325.2s
+Epoch [1] Batch [710/1607] Loss: 0.0330 LR: 0.005000 Time: 1344.1s
+Epoch [1] Batch [720/1607] Loss: 0.0035 LR: 0.005000 Time: 1362.9s
+Epoch [1] Batch [730/1607] Loss: 0.0112 LR: 0.005000 Time: 1381.8s
+Epoch [1] Batch [740/1607] Loss: 0.0019 LR: 0.005000 Time: 1400.6s
+Epoch [1] Batch [750/1607] Loss: 0.0015 LR: 0.005000 Time: 1419.4s
+Epoch [1] Batch [760/1607] Loss: 0.0235 LR: 0.005000 Time: 1438.3s
+Epoch [1] Batch [770/1607] Loss: 0.0215 LR: 0.005000 Time: 1457.2s
+Epoch [1] Batch [780/1607] Loss: 0.0533 LR: 0.005000 Time: 1476.1s
+Epoch [1] Batch [790/1607] Loss: 0.0372 LR: 0.005000 Time: 1495.0s
+Epoch [1] Batch [800/1607] Loss: 0.0554 LR: 0.005000 Time: 1513.9s
+Epoch [1] Batch [810/1607] Loss: 0.0133 LR: 0.005000 Time: 1532.8s
+Epoch [1] Batch [820/1607] Loss: 0.0208 LR: 0.005000 Time: 1551.6s
+Epoch [1] Batch [830/1607] Loss: 0.0704 LR: 0.005000 Time: 1570.5s
+Epoch [1] Batch [840/1607] Loss: 0.0097 LR: 0.005000 Time: 1589.3s
+Epoch [1] Batch [850/1607] Loss: 0.0157 LR: 0.005000 Time: 1608.2s
+Epoch [1] Batch [860/1607] Loss: 0.0138 LR: 0.005000 Time: 1627.2s
+Epoch [1] Batch [870/1607] Loss: 0.0008 LR: 0.005000 Time: 1646.1s
+Epoch [1] Batch [880/1607] Loss: 0.0271 LR: 0.005000 Time: 1665.0s
+Epoch [1] Batch [890/1607] Loss: 0.0015 LR: 0.005000 Time: 1683.9s
+Epoch [1] Batch [900/1607] Loss: 0.0556 LR: 0.005000 Time: 1702.8s
+Epoch [1] Batch [910/1607] Loss: 0.0331 LR: 0.005000 Time: 1721.7s
+Epoch [1] Batch [920/1607] Loss: 0.0160 LR: 0.005000 Time: 1740.6s
+Epoch [1] Batch [930/1607] Loss: 0.0588 LR: 0.005000 Time: 1759.5s
+Epoch [1] Batch [940/1607] Loss: 0.0015 LR: 0.005000 Time: 1778.4s
+Epoch [1] Batch [950/1607] Loss: 0.0140 LR: 0.005000 Time: 1797.3s
+Epoch [1] Batch [960/1607] Loss: 0.0139 LR: 0.005000 Time: 1816.2s
+Epoch [1] Batch [970/1607] Loss: 0.0471 LR: 0.005000 Time: 1835.1s
+Epoch [1] Batch [980/1607] Loss: 0.0269 LR: 0.005000 Time: 1854.0s
+Epoch [1] Batch [990/1607] Loss: 0.0127 LR: 0.005000 Time: 1872.8s
+Epoch [1] Batch [1000/1607] Loss: 0.0388 LR: 0.005000 Time: 1891.7s
+Epoch [1] Batch [1010/1607] Loss: 0.0230 LR: 0.005000 Time: 1910.6s
+Epoch [1] Batch [1020/1607] Loss: 0.0301 LR: 0.005000 Time: 1929.5s
+Epoch [1] Batch [1030/1607] Loss: 0.0496 LR: 0.005000 Time: 1948.4s
+Epoch [1] Batch [1040/1607] Loss: 0.0319 LR: 0.005000 Time: 1967.2s
+Epoch [1] Batch [1050/1607] Loss: 0.0597 LR: 0.005000 Time: 1986.1s
+Epoch [1] Batch [1060/1607] Loss: 0.0023 LR: 0.005000 Time: 2005.0s
+Epoch [1] Batch [1070/1607] Loss: 0.0018 LR: 0.005000 Time: 2023.8s
+Epoch [1] Batch [1080/1607] Loss: 0.0181 LR: 0.005000 Time: 2042.6s
+Epoch [1] Batch [1090/1607] Loss: 0.0230 LR: 0.005000 Time: 2061.6s
+Epoch [1] Batch [1100/1607] Loss: 0.0617 LR: 0.005000 Time: 2080.5s
+Epoch [1] Batch [1110/1607] Loss: 0.0314 LR: 0.005000 Time: 2099.4s
+Epoch [1] Batch [1120/1607] Loss: 0.0596 LR: 0.005000 Time: 2118.4s
+Epoch [1] Batch [1130/1607] Loss: 0.0070 LR: 0.005000 Time: 2137.3s
+Epoch [1] Batch [1140/1607] Loss: 0.0007 LR: 0.005000 Time: 2156.2s
+Epoch [1] Batch [1150/1607] Loss: 0.0019 LR: 0.005000 Time: 2175.0s
+Epoch [1] Batch [1160/1607] Loss: 0.0406 LR: 0.005000 Time: 2193.9s
+Epoch [1] Batch [1170/1607] Loss: 0.0261 LR: 0.005000 Time: 2212.8s
+Epoch [1] Batch [1180/1607] Loss: 0.0605 LR: 0.005000 Time: 2231.7s
+Epoch [1] Batch [1190/1607] Loss: 0.0142 LR: 0.005000 Time: 2250.5s
+Epoch [1] Batch [1200/1607] Loss: 0.0304 LR: 0.005000 Time: 2269.4s
+Epoch [1] Batch [1210/1607] Loss: 0.0126 LR: 0.005000 Time: 2288.3s
+Epoch [1] Batch [1220/1607] Loss: 0.0143 LR: 0.005000 Time: 2307.0s
+Epoch [1] Batch [1230/1607] Loss: 0.0311 LR: 0.005000 Time: 2325.9s
+Epoch [1] Batch [1240/1607] Loss: 0.0274 LR: 0.005000 Time: 2344.7s
+Epoch [1] Batch [1250/1607] Loss: 0.0182 LR: 0.005000 Time: 2363.6s
+Epoch [1] Batch [1260/1607] Loss: 0.0494 LR: 0.005000 Time: 2382.4s
+Epoch [1] Batch [1270/1607] Loss: 0.0184 LR: 0.005000 Time: 2401.3s
+Epoch [1] Batch [1280/1607] Loss: 0.0134 LR: 0.005000 Time: 2420.2s
+Epoch [1] Batch [1290/1607] Loss: 0.0175 LR: 0.005000 Time: 2439.1s
+Epoch [1] Batch [1300/1607] Loss: 0.0180 LR: 0.005000 Time: 2458.0s
+Epoch [1] Batch [1310/1607] Loss: 0.0265 LR: 0.005000 Time: 2476.9s
+Epoch [1] Batch [1320/1607] Loss: 0.0085 LR: 0.005000 Time: 2495.8s
+Epoch [1] Batch [1330/1607] Loss: 0.0029 LR: 0.005000 Time: 2514.6s
+Epoch [1] Batch [1340/1607] Loss: 0.0217 LR: 0.005000 Time: 2533.5s
+Epoch [1] Batch [1350/1607] Loss: 0.0293 LR: 0.005000 Time: 2552.4s
+Epoch [1] Batch [1360/1607] Loss: 0.0019 LR: 0.005000 Time: 2571.3s
+Epoch [1] Batch [1370/1607] Loss: 0.0324 LR: 0.005000 Time: 2590.2s
+Epoch [1] Batch [1380/1607] Loss: 0.0359 LR: 0.005000 Time: 2609.1s
+Epoch [1] Batch [1390/1607] Loss: 0.0635 LR: 0.005000 Time: 2627.9s
+Epoch [1] Batch [1400/1607] Loss: 0.0043 LR: 0.005000 Time: 2646.7s
+Epoch [1] Batch [1410/1607] Loss: 0.0183 LR: 0.005000 Time: 2665.6s
+Epoch [1] Batch [1420/1607] Loss: 0.0602 LR: 0.005000 Time: 2684.5s
