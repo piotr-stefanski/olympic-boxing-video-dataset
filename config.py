@@ -8,5 +8,6 @@ FOLDS_DEFINITION = {
     'fold_4': {'start': 425685, 'end': 528323},
     'fold_5': {'start': 528324, 'end': 630964}
 }
-DATABASE_PATH = os.environ.get("DATABASE_PATH", '../database')
+DATABASE_PATH = os.environ.get("DATABASE_PATH", '../datasets/olympic-boxing-video-dataset')
 COCO_IMAGES_DIR_PATH = f'{DATABASE_PATH}/coco_images'
+COCO_ANNOTATIONS_DIR_PATH = f'{DATABASE_PATH}/annotations'

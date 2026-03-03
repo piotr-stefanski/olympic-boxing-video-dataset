@@ -7,9 +7,9 @@
    1. (Temporary link, TO REPLACE) https://drive.google.com/drive/folders/1s7KxrnJg_1CigQVIIghQ2T3Hty5NIufm?usp=sharing
    2. For this you can use `gdown` package, run following command in terminal:
    ```bash
-    uv run gdown --folder 1s7KxrnJg_1CigQVIIghQ2T3Hty5NIufm -O ../database
+    uv run gdown --folder 1s7KxrnJg_1CigQVIIghQ2T3Hty5NIufm -O ../datasets/olympic-boxing-video-dataset
     ```
-4. Adjust $DATABASE_PATH environment variable if you put repository in another location than `../database`
+4. Adjust $DATABASE_PATH environment variable if you put repository in another location than `../datasets/olympic-boxing-video-dataset`
 
 # Initialization
 1. Convert original database to coco format by running script:

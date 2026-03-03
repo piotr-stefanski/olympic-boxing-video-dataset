@@ -3,7 +3,8 @@ import glob
 import os
 import json
 import argparse
-from config import EXPECTED_TOTAL_NUMBER_OF_FRAMES, FOLDS_DEFINITION, DATABASE_PATH, COCO_IMAGES_DIR_PATH
+from tqdm import tqdm
+from config import EXPECTED_TOTAL_NUMBER_OF_FRAMES, FOLDS_DEFINITION, DATABASE_PATH, COCO_IMAGES_DIR_PATH, COCO_ANNOTATIONS_DIR_PATH
 
 LABEL_TO_INDEX_MAP = {
     'Głowa lewą ręką': 0,
@@ -125,17 +126,20 @@ def is_frame_was_reviewed_by_referee(video_frame_idx, annotations):
         return False
     return video_frame_idx in annotations.get("frame_numbers_reviewed_by_referee")
 
-def collect_and_save_annotations(images, annotations):
-    data = {
-        "info": get_info(),
-        "licenses": get_licenses(),
-        "categories": get_categories(),
-        "images": images,
-        "annotations": annotations
-    }
+def collect_and_save_annotations(fold_data):
+    for fold_name, fold in fold_data.items():
+        data = {
+            "info": get_info(),
+            "licenses": get_licenses(),
+            "categories": get_categories(),
+            "images": fold["images"],
+            "annotations": fold["annotations"]
+        }
 
-    with open(f'{DATABASE_PATH}/annotations.json', 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+        output_path = f'{COCO_ANNOTATIONS_DIR_PATH}/annotations_{fold_name}.json'
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        print(f'[INFO] Saved {len(fold["images"])} images and {len(fold["annotations"])} annotations to {output_path}')
 
 def get_frame_annotations(annotations_idx, global_image_idx, video_frame_idx, annotations):
     if annotations is None:
@@ -198,8 +202,7 @@ def get_fold_number_based_on_frame_idx(cam_frame_idx: int) -> str:
 def main(debug=False, save_images=False):
     global_image_idx = 0
     annotations_idx = 0
-    coco_annotations = []
-    coco_images = []
+    fold_data = {fold: {"images": [], "annotations": []} for fold in FOLDS_DEFINITION}
 
     for cam_number in [2, 4]:
         cam_name = f'kam{cam_number}'
@@ -208,12 +211,11 @@ def main(debug=False, save_images=False):
 
         for video_path in video_paths:
             annotations = load_annotation(video_path)
-            video_frame_idx = 0
 
-            print(f'read {video_path}')
             cap = cv2.VideoCapture(video_path)
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
-            while cap.isOpened():
+            for video_frame_idx in tqdm(range(total_frames), desc=f'{cam_name} - {os.path.basename(video_path)}'):
                 ret, frame = cap.read()
                 if not ret:
                     break
@@ -221,12 +223,12 @@ def main(debug=False, save_images=False):
                 if cam_frame_idx >= FOLDS_DEFINITION['fold_1']['start'] and is_frame_was_reviewed_by_referee(video_frame_idx, annotations):
                     fold_number = get_fold_number_based_on_frame_idx(cam_frame_idx)
                     image = get_coco_image_based_on_frame(global_image_idx, cam_frame_idx, cam_name, fold_number, frame)
-                    coco_images.append(image)
+                    fold_data[fold_number]["images"].append(image)
                     save_coco_image(frame, global_image_idx, save_images)
 
                     frame_annotations = get_frame_annotations(annotations_idx, global_image_idx, video_frame_idx, annotations)
                     if frame_annotations is not None:
-                        coco_annotations.extend(frame_annotations)
+                        fold_data[fold_number]["annotations"].extend(frame_annotations)
 
                         if annotations_idx%1000 == 0 and len(frame_annotations) > 0 and debug:
                             draw_frame = draw_annotation_on_frame(frame, frame_annotations[0])
@@ -238,14 +240,10 @@ def main(debug=False, save_images=False):
 
                     global_image_idx += 1
 
-                if cam_frame_idx % 50000 == 0:
-                    print(f'Processed {cam_frame_idx} frames')
-
-                video_frame_idx += 1
                 cam_frame_idx += 1
             cap.release()
 
-            collect_and_save_annotations(coco_images, coco_annotations)
+            collect_and_save_annotations(fold_data)
 
 
         print(f'[INFO] end of videos for {cam_name}')
@@ -257,6 +255,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--save-images', help='Description for foo argument', action='store_true')
     args = parser.parse_args()
+
+    os.makedirs(COCO_ANNOTATIONS_DIR_PATH, exist_ok=True)
 
     if args.save_images:
         os.makedirs(COCO_IMAGES_DIR_PATH, exist_ok=True)
