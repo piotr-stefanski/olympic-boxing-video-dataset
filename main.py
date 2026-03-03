@@ -9,6 +9,7 @@ from torch.utils.data import Dataset, DataLoader
 from pycocotools.coco import COCO
 from torchvision.transforms import ToTensor
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
+from torch.utils.tensorboard import SummaryWriter
 from engine import train_one_epoch, evaluate
 from dataloader import CocoDetectionDataset
 
@@ -118,22 +119,36 @@ def main():
     optimizer = torch.optim.SGD(params, lr=0.005, momentum=0.9, weight_decay=0.0005)
 
     # Number of epochs for training
-    num_epochs = 10
-    
+    num_epochs = 100
+
+    writer = SummaryWriter(log_dir="output/tensorboard_logs")
+
     # Loop through each epoch
     for epoch in range(num_epochs):
         print(f"\nEpoch {epoch + 1}/{num_epochs}")
     
         # Train the model for one epoch, printing status every 25 iterations
-        train_one_epoch(model, optimizer, train_loader, device, epoch, print_freq=25)  # Using train_loader for training
+        metric_logger = train_one_epoch(model, optimizer, train_loader, device, epoch, print_freq=25)
+
+        # Log training loss
+        avg_loss = metric_logger.meters['loss'].global_avg
+        writer.add_scalar('Loss/train', avg_loss, epoch)
     
         # Evaluate the model only on the validation dataset, not training
-        evaluate(model, val_loader, device=device)  # Using val_loader for evaluation
+        coco_evaluator = evaluate(model, val_loader, device=device)
+
+        # Log COCO evaluation metrics
+        coco_stats = coco_evaluator.coco_eval['bbox'].stats
+        writer.add_scalar('AP/IoU_0.50_0.95_all_maxDets_100', coco_stats[0], epoch)
+        writer.add_scalar('AP/IoU_0.50_all_maxDets_100', coco_stats[1], epoch)
+        writer.add_scalar('AR/IoU_0.50_0.95_all_maxDets_10', coco_stats[6], epoch)
     
         if (epoch + 1) % 10 == 0:
             # save the model after each epoch
             print(f"Saving model after epoch {epoch + 1}")
             torch.save(model.state_dict(), f"model_epoch_{epoch + 1}.pth")
+
+    writer.close()
 
 if __name__ == "__main__":
     main()
