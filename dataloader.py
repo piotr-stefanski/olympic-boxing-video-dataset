@@ -39,7 +39,7 @@ class CocoDetectionDataset(Dataset):
             labels.append(obj['category_id'])
  
         # Convert annotations to PyTorch tensors
-        boxes = torch.as_tensor(boxes, dtype=torch.float32)
+        boxes = torch.as_tensor(boxes, dtype=torch.float32).reshape(-1, 4)
         labels = torch.as_tensor(labels, dtype=torch.int64)
         area = torch.as_tensor([obj['area'] for obj in annotations], dtype=torch.float32)
         iscrowd = torch.as_tensor([obj.get('iscrowd', 0) for obj in annotations], dtype=torch.int64)

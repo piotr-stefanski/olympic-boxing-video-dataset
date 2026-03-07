@@ -78,21 +78,29 @@ def save_few_examples(data_loader, output_dir, num_examples=5):
 def main():
     # Load training dataset
     train_dataset = CocoDetectionDataset(
-        image_dir="../datasets/football-players-detection/train", 
-        annotation_path="../datasets/football-players-detection/train/_annotations.coco.json",
+        #image_dir="../datasets/football-players-detection/train", 
+        #annotation_path="../datasets/football-players-detection/train/_annotations.coco.json",
+        image_dir='../datasets/olympic-boxing-video-dataset/coco_images',
+        annotation_path='../datasets/olympic-boxing-video-dataset/annotations/annotations_fold_1.json',
         transforms=get_transform()
     )
     
     # Load validation dataset
     val_dataset = CocoDetectionDataset(
-        image_dir="../datasets/football-players-detection/valid",
-        annotation_path="../datasets/football-players-detection/valid/_annotations.coco.json",
+        #image_dir="../datasets/football-players-detection/valid",
+        #annotation_path="../datasets/football-players-detection/valid/_annotations.coco.json",
+        image_dir='../datasets/olympic-boxing-video-dataset/coco_images',
+        annotation_path='../datasets/olympic-boxing-video-dataset/annotations/annotations_fold_5.json',
         transforms=get_transform()
     )
     
     # Load dataset with DataLoaders, you can change batch_size 
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, collate_fn=lambda x: tuple(zip(*x)))
-    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, collate_fn=lambda x: tuple(zip(*x)))
+    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True,
+                              num_workers=6, pin_memory=True,
+                              collate_fn=lambda x: tuple(zip(*x)))
+    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False,
+                            num_workers=6, pin_memory=True,
+                            collate_fn=lambda x: tuple(zip(*x)))
 
     # Load a pre-trained Faster R-CNN model with ResNet50 backbone and FPN, , you change this 
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
@@ -100,6 +108,7 @@ def main():
     # Number of classes in the dataset (including background)
     # +1 for bg class
     num_classes = len(train_dataset.coco.getCatIds()) + 1 
+    print(f'Number of classes: {num_classes}')
     
     # Number of input features for the classifier head
     in_features = model.roi_heads.box_predictor.cls_score.in_features
@@ -119,7 +128,7 @@ def main():
     optimizer = torch.optim.SGD(params, lr=0.005, momentum=0.9, weight_decay=0.0005)
 
     # Number of epochs for training
-    num_epochs = 100
+    num_epochs = 10
 
     writer = SummaryWriter(log_dir="output/tensorboard_logs")
 
