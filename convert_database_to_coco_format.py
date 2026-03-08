@@ -186,6 +186,7 @@ def get_coco_image_based_on_frame(global_image_idx, cam_frame_idx, cam_name, fol
 
 def save_coco_image(image, image_id, save_images, target_shape: dict|None = None):
     if save_images:
+        # TODO: IMPORTANT: implement also scaling annotations when shape of image is changed
         if target_shape is not None:
             image = cv2.resize(image, target_shape)
 
@@ -199,7 +200,7 @@ def get_fold_number_based_on_frame_idx(cam_frame_idx: int) -> str:
 
     raise ValueError("Index out of bounds")
 
-def main(debug=False, save_images=False):
+def main(debug=False, save_images=False, target_shape=None):
     global_image_idx = 0
     annotations_idx = 0
     fold_data = {fold: {"images": [], "annotations": []} for fold in FOLDS_DEFINITION}
@@ -224,7 +225,7 @@ def main(debug=False, save_images=False):
                     fold_number = get_fold_number_based_on_frame_idx(cam_frame_idx)
                     image = get_coco_image_based_on_frame(global_image_idx, cam_frame_idx, cam_name, fold_number, frame)
                     fold_data[fold_number]["images"].append(image)
-                    save_coco_image(frame, global_image_idx, save_images)
+                    save_coco_image(frame, global_image_idx, save_images, target_shape=target_shape)
 
                     frame_annotations = get_frame_annotations(annotations_idx, global_image_idx, video_frame_idx, annotations)
                     if frame_annotations is not None:
@@ -254,11 +255,14 @@ def main(debug=False, save_images=False):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--save-images', help='Description for foo argument', action='store_true')
+    parser.add_argument('--target-shape', help='Target shape (width height) for resizing saved images', type=int, nargs=2, default=None, metavar=('W', 'H'))
     args = parser.parse_args()
+
+    target_shape = tuple(args.target_shape) if args.target_shape else None
 
     os.makedirs(COCO_ANNOTATIONS_DIR_PATH, exist_ok=True)
 
     if args.save_images:
         os.makedirs(COCO_IMAGES_DIR_PATH, exist_ok=True)
 
-    main(save_images=args.save_images)
+    main(save_images=args.save_images, target_shape=target_shape)
