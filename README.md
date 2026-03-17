@@ -16,7 +16,6 @@
 ```bash
 uv run convert_database_to_coco_format.py --save-images
 ```
-⚠️ Be carefully `--save-images` flag extract frames from video and save it in original size to the disk, you need **~156GB** of free disk to that operation.
 
 ⚠️ This command is not well optimized and takes some time.
 
