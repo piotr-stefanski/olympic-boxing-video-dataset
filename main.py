@@ -96,10 +96,10 @@ def main():
     
     # Load dataset with DataLoaders, you can change batch_size 
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True,
-                              num_workers=6, pin_memory=True, prefetch_factor=4,
+                              num_workers=4, pin_memory=True, prefetch_factor=4,
                               collate_fn=lambda x: tuple(zip(*x)))
     val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False,
-                            num_workers=6, pin_memory=True, prefetch_factor=4,
+                            num_workers=4, pin_memory=True, prefetch_factor=4,
                             collate_fn=lambda x: tuple(zip(*x)))
 
     # Load a pre-trained Faster R-CNN model with ResNet50 backbone and FPN, , you change this 
@@ -128,7 +128,7 @@ def main():
     optimizer = torch.optim.SGD(params, lr=0.005, momentum=0.9, weight_decay=0.0005)
 
     # Number of epochs for training
-    num_epochs = 10
+    num_epochs = 100
 
     writer = SummaryWriter(log_dir="output/tensorboard_logs")
 

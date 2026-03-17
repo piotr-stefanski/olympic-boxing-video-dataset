@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=5
 #SBATCH --gpus=1
 #SBATCH --mem=24G
-#SBATCH --time=2:00:00
+#SBATCH --time=10:00:00
 #SBATCH --output=output/train_%j.log
 #SBATCH --error=output/train_%j.log
 
