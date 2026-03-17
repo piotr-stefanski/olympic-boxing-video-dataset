@@ -96,10 +96,10 @@ def main():
     
     # Load dataset with DataLoaders, you can change batch_size 
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True,
-                              num_workers=6, pin_memory=True,
+                              num_workers=6, pin_memory=True, prefetch_factor=4,
                               collate_fn=lambda x: tuple(zip(*x)))
     val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False,
-                            num_workers=6, pin_memory=True,
+                            num_workers=6, pin_memory=True, prefetch_factor=4,
                             collate_fn=lambda x: tuple(zip(*x)))
 
     # Load a pre-trained Faster R-CNN model with ResNet50 backbone and FPN, , you change this 
