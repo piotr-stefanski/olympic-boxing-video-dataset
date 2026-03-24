@@ -5,7 +5,7 @@ import torch
 import torchvision
 from PIL import Image
 import numpy as np
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, ConcatDataset
 from pycocotools.coco import COCO
 from torchvision.transforms import ToTensor
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
@@ -76,21 +76,36 @@ def save_few_examples(data_loader, output_dir, num_examples=5):
 
 
 def main():
-    # Load training dataset
-    train_dataset = CocoDetectionDataset(
-        #image_dir="../datasets/football-players-detection/train", 
-        #annotation_path="../datasets/football-players-detection/train/_annotations.coco.json",
-        image_dir='../datasets/olympic-boxing-video-dataset/coco_images',
-        annotation_path='../datasets/olympic-boxing-video-dataset/annotations/annotations_fold_1.json',
+    # Load training datasets (folds 1, 2, and 3)
+    image_dir = '../datasets/olympic-boxing-video-dataset/coco_images'
+    annotations_dir = '../datasets/olympic-boxing-video-dataset/annotations'
+    
+    fold_1_dataset = CocoDetectionDataset(
+        image_dir=image_dir,
+        annotation_path=f'{annotations_dir}/annotations_fold_1.json',
         transforms=get_transform()
     )
+    fold_2_dataset = CocoDetectionDataset(
+        image_dir=image_dir,
+        annotation_path=f'{annotations_dir}/annotations_fold_2.json',
+        transforms=get_transform()
+    )
+    fold_3_dataset = CocoDetectionDataset(
+        image_dir=image_dir,
+        annotation_path=f'{annotations_dir}/annotations_fold_3.json',
+        transforms=get_transform()
+    )
+    fold_4_dataset = CocoDetectionDataset(
+        image_dir=image_dir,
+        annotation_path=f'{annotations_dir}/annotations_fold_4.json',
+        transforms=get_transform()
+    )
+    train_dataset = ConcatDataset([fold_1_dataset, fold_2_dataset, fold_3_dataset, fold_4_dataset])
     
     # Load validation dataset
     val_dataset = CocoDetectionDataset(
-        #image_dir="../datasets/football-players-detection/valid",
-        #annotation_path="../datasets/football-players-detection/valid/_annotations.coco.json",
-        image_dir='../datasets/olympic-boxing-video-dataset/coco_images',
-        annotation_path='../datasets/olympic-boxing-video-dataset/annotations/annotations_fold_5.json',
+        image_dir=image_dir,
+        annotation_path=f'{annotations_dir}/annotations_fold_5.json',
         transforms=get_transform()
     )
     
@@ -107,7 +122,7 @@ def main():
     
     # Number of classes in the dataset (including background)
     # +1 for bg class
-    num_classes = len(train_dataset.coco.getCatIds()) + 1 
+    num_classes = len(fold_1_dataset.coco.getCatIds()) + 1 
     print(f'Number of classes: {num_classes}')
     
     # Number of input features for the classifier head
