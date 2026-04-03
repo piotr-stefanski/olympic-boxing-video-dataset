@@ -4,4 +4,7 @@ __pycache__
 .DS_Store
 output
 *.pth
+*.pt
 nohup.out
+
+runs

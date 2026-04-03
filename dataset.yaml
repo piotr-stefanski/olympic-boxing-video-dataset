@@ -1,0 +1,19 @@
+# Ultralytics YOLO dataset configuration for Olympic Boxing Video Dataset
+#
+# Before training, convert COCO annotations to YOLO format:
+#   uv run convert_coco_to_yolo.py
+
+path: ../datasets/olympic-boxing-video-dataset/yolo_dataset
+train: images/train
+val: images/val
+
+# Class names (8 boxing action classes)
+names:
+  0: Punch to the head with the left hand
+  1: Punch to the head with the right hand
+  2: Punch to the torso with the left hand
+  3: Punch to the torso with the right hand
+  4: Block with the left hand
+  5: Block with the right hand
+  6: Missed punch with the left hand
+  7: Missed punch with the right hand
