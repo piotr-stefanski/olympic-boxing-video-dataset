@@ -12,12 +12,15 @@ import argparse
 import os
 import math
 
+import numpy as np
+
 from detectron2 import model_zoo
 from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.data.datasets import register_coco_instances
 from detectron2.engine import DefaultTrainer
 from detectron2.evaluation import COCOEvaluator
+from detectron2.utils.events import get_event_storage
 
 
 DATASET_DIR = '../datasets/olympic-boxing-video-dataset'
@@ -55,13 +58,68 @@ def count_train_images(train_dataset_names: list[str]) -> int:
     return total
 
 
+class DetailedCOCOEvaluator(COCOEvaluator):
+    """
+    Extended COCOEvaluator that extracts:
+      - mAP at each IoU threshold from 0.50 to 0.95 in steps of 0.05 (map50, map55, ..., map95)
+      - mAP@0.5:0.95 (averaged)
+      - mAR@100
+    Only applied to the 'bbox' task. Custom metrics are pushed into the EventStorage
+    (so they land in TensorBoard) and merged into the returned results dict.
+    """
+    def _derive_coco_results(self, coco_eval, iou_type, class_names=None):
+        results = super()._derive_coco_results(coco_eval, iou_type, class_names)
+
+        if iou_type != 'bbox' or coco_eval is None:
+            return results
+
+        try:
+            precision = coco_eval.eval['precision']  # shape [T, R, K, A, M]
+        except Exception:
+            return results
+
+        # T=10 IoU thresholds, A=0 (all areas), M=-1 (maxDets=100)
+        iou_thresholds = np.linspace(0.5, 0.95, 10)
+        per_iou_ap = {}
+        for t, iou in enumerate(iou_thresholds):
+            p = precision[t, :, :, 0, -1]  # [R, K]
+            valid = p[p > -1]
+            ap = float(np.mean(valid) * 100) if valid.size else float('nan')
+            per_iou_ap[f'map{int(round(iou * 100))}'] = ap
+
+        mean_ap = float(np.nanmean(list(per_iou_ap.values())))
+        mar_100 = float(coco_eval.stats[8] * 100) if coco_eval.stats is not None else float('nan')
+
+        # Push into EventStorage (TensorBoard + metrics.json)
+        try:
+            storage = get_event_storage()
+            for k, v in per_iou_ap.items():
+                storage.put_scalar(f'bbox/{k}', v, smoothing_hint=False)
+            storage.put_scalar('bbox/map50_95', mean_ap, smoothing_hint=False)
+            storage.put_scalar('bbox/mar100', mar_100, smoothing_hint=False)
+        except AssertionError:
+            pass  # no active storage (standalone eval)
+
+        results.update(per_iou_ap)
+        results['map50_95'] = mean_ap
+        results['mar100'] = mar_100
+
+        print('\n=== Custom metrics (scaled to 0-100) ===')
+        for k, v in per_iou_ap.items():
+            print(f'  {k}: {v:.3f}')
+        print(f'  map50_95: {mean_ap:.3f}')
+        print(f'  mar100:   {mar_100:.3f}')
+
+        return results
+
+
 class CocoTrainer(DefaultTrainer):
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, 'eval')
         os.makedirs(output_folder, exist_ok=True)
-        return COCOEvaluator(dataset_name, output_dir=output_folder)
+        return DetailedCOCOEvaluator(dataset_name, output_dir=output_folder)
 
 
 def build_cfg(train_datasets, val_datasets, output_dir, epochs, ims_per_batch, base_lr, num_workers):
