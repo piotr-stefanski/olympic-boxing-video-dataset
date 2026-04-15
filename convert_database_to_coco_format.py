@@ -177,8 +177,9 @@ def get_frame_annotations(annotations_idx, global_image_idx, video_frame_idx, an
                     "segmentation": [],
                     "iscrowd": 0
                 })
+                annotations_idx += 1
 
-    return frame_annotations
+    return annotations_idx, frame_annotations
 
 def get_coco_image_based_on_frame(global_image_idx, cam_frame_idx, cam_name, fold_number, frame):
     h, w, _ = frame.shape
@@ -238,8 +239,8 @@ def main(debug=False, save_images=False, target_shape=None):
                     fold_data[fold_number]["images"].append(image)
                     save_coco_image(frame, global_image_idx, save_images, target_shape=target_shape)
 
-                    frame_annotations = get_frame_annotations(annotations_idx, global_image_idx, video_frame_idx, annotations)
-                    if frame_annotations is not None:
+                    annotations_idx, frame_annotations = get_frame_annotations(annotations_idx, global_image_idx, video_frame_idx, annotations)
+                    if frame_annotations:
                         fold_data[fold_number]["annotations"].extend(frame_annotations)
 
                         if annotations_idx%1000 == 0 and len(frame_annotations) > 0 and debug:
@@ -247,8 +248,6 @@ def main(debug=False, save_images=False, target_shape=None):
                             cv2.imshow('frame', draw_frame)
                             cv2.waitKey(0)
                             cv2.destroyAllWindows()
-
-                        annotations_idx += 1
 
                     global_image_idx += 1
 
