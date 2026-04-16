@@ -19,6 +19,7 @@ from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.data.datasets import register_coco_instances
 from detectron2.engine import DefaultTrainer
+from detectron2.engine.hooks import BestCheckpointer
 from detectron2.evaluation import COCOEvaluator
 from detectron2.utils.events import get_event_storage
 
@@ -121,11 +122,25 @@ class CocoTrainer(DefaultTrainer):
         os.makedirs(output_folder, exist_ok=True)
         return DetailedCOCOEvaluator(dataset_name, output_dir=output_folder)
 
+    def build_hooks(self):
+        hooks = super().build_hooks()
+        # Track best checkpoint by mAP@0.5:0.95 (pushed to storage by DetailedCOCOEvaluator).
+        # Insert after eval hook so the metric is in EventStorage when this runs.
+        best_hook = BestCheckpointer(
+            eval_period=self.cfg.TEST.EVAL_PERIOD,
+            checkpointer=self.checkpointer,
+            val_metric='bbox/map50_95',
+            mode='max',
+            file_prefix='model_best',
+        )
+        hooks.insert(-1, best_hook)
+        return hooks
 
-def build_cfg(train_datasets, val_datasets, output_dir, epochs, ims_per_batch, base_lr, num_workers):
+
+def build_cfg(train_datasets, val_datasets, output_dir, epochs, ims_per_batch, base_lr, num_workers, model_config):
     cfg = get_cfg()
-    cfg.merge_from_file(model_zoo.get_config_file('COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml'))
-    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url('COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml')
+    cfg.merge_from_file(model_zoo.get_config_file(model_config))
+    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(model_config)
 
     cfg.DATASETS.TRAIN = tuple(train_datasets)
     cfg.DATASETS.TEST = tuple(val_datasets)
@@ -138,14 +153,20 @@ def build_cfg(train_datasets, val_datasets, output_dir, epochs, ims_per_batch, b
     num_train_imgs = count_train_images(train_datasets)
     iters_per_epoch = max(1, math.ceil(num_train_imgs / ims_per_batch))
     cfg.SOLVER.MAX_ITER = epochs * iters_per_epoch
-    # Save checkpoint every 10 epochs (matches ultralytics setup)
+    # Rolling "latest" checkpoint every 10 epochs, keep only 1 (for resume safety).
+    # model_best.pth and model_final.pth are handled separately and NOT affected by MAX_TO_KEEP.
     cfg.SOLVER.CHECKPOINT_PERIOD = 10 * iters_per_epoch
+    cfg.SOLVER.MAX_TO_KEEP = 1
     # Evaluate every epoch
     cfg.TEST.EVAL_PERIOD = iters_per_epoch
 
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = NUM_CLASSES
     cfg.OUTPUT_DIR = output_dir
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
+
+    # Dump frozen config for provenance
+    with open(os.path.join(cfg.OUTPUT_DIR, 'config.yaml'), 'w') as f:
+        f.write(cfg.dump())
 
     print(f'\nTraining images: {num_train_imgs}')
     print(f'Iterations per epoch: {iters_per_epoch}')
@@ -162,8 +183,14 @@ def main():
     parser.add_argument('--lr', type=float, default=0.005)
     parser.add_argument('--workers', type=int, default=4)
     parser.add_argument('--output-dir', type=str, default='output/detectron2_run')
-    parser.add_argument('--resume', action='store_true')
+    parser.add_argument('--model-config', type=str,
+                        default='COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml',
+                        help='Detectron2 model zoo config path')
+    parser.add_argument('--no-resume', action='store_true',
+                        help='Disable auto-resume from existing checkpoints in output-dir')
     args = parser.parse_args()
+    # Resume by default if output-dir already has checkpoints
+    resume = not args.no_resume
 
     print(f'Train folds: {args.train_folds}')
     print(f'Val folds:   {args.val_folds}')
@@ -180,10 +207,11 @@ def main():
         ims_per_batch=args.batch,
         base_lr=args.lr,
         num_workers=args.workers,
+        model_config=args.model_config,
     )
 
     trainer = CocoTrainer(cfg)
-    trainer.resume_or_load(resume=args.resume)
+    trainer.resume_or_load(resume=resume)
     trainer.train()
 
 
