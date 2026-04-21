@@ -8,3 +8,4 @@ output
 nohup.out
 
 runs
+*.csv

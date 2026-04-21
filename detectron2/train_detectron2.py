@@ -1,12 +1,14 @@
 """
 Detectron2 training script for the Olympic Boxing Video Dataset.
 
-Trains a Faster R-CNN R50-FPN on configurable train/val fold combinations.
+Uses the provider's default config (LR, batch size, warmup) unchanged.
+Only sets NUM_CLASSES, DATASETS, OUTPUT_DIR, MAX_ITER, EVAL_PERIOD,
+CHECKPOINT_PERIOD, and disables SOLVER.STEPS for a constant LR schedule.
 
 Usage:
     uv run train_detectron2.py
     uv run train_detectron2.py --train-folds 1 2 3 4 --val-folds 5
-    uv run train_detectron2.py --train-folds 1 2 --val-folds 3 4 5 --epochs 200
+    uv run train_detectron2.py --model-config COCO-Detection/retinanet_R_50_FPN_3x.yaml
 """
 import argparse
 import os
@@ -19,12 +21,13 @@ from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog, DatasetCatalog
 from detectron2.data.datasets import register_coco_instances
 from detectron2.engine import DefaultTrainer
-from detectron2.engine.hooks import BestCheckpointer
+from detectron2.engine.hooks import BestCheckpointer, HookBase
 from detectron2.evaluation import COCOEvaluator
 from detectron2.utils.events import get_event_storage
 
 
-DATASET_DIR = '../datasets/olympic-boxing-video-dataset'
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, '../../datasets/olympic-boxing-video-dataset'))
 IMAGES_DIR = os.path.join(DATASET_DIR, 'coco_images')
 ANNOTATIONS_DIR = os.path.join(DATASET_DIR, 'annotations')
 NUM_CLASSES = 8  # boxing action categories (see data-utils/config.py)
@@ -41,7 +44,6 @@ def register_folds(fold_numbers: list[int], split_name: str) -> list[str]:
         if not os.path.exists(ann_path):
             raise FileNotFoundError(f'Annotation file not found: {ann_path}')
 
-        # Avoid double-registration if script re-runs in same process
         if name in DatasetCatalog.list():
             DatasetCatalog.remove(name)
             MetadataCatalog.remove(name)
@@ -61,12 +63,8 @@ def count_train_images(train_dataset_names: list[str]) -> int:
 
 class DetailedCOCOEvaluator(COCOEvaluator):
     """
-    Extended COCOEvaluator that extracts:
-      - mAP at each IoU threshold from 0.50 to 0.95 in steps of 0.05 (map50, map55, ..., map95)
-      - mAP@0.5:0.95 (averaged)
-      - mAR@100
-    Only applied to the 'bbox' task. Custom metrics are pushed into the EventStorage
-    (so they land in TensorBoard) and merged into the returned results dict.
+    Extended COCOEvaluator that extracts per-IoU mAP (map50..map95),
+    mAP@0.5:0.95, and mAR@100, pushing them to EventStorage (TensorBoard).
     """
     def _derive_coco_results(self, coco_eval, iou_type, class_names=None):
         results = super()._derive_coco_results(coco_eval, iou_type, class_names)
@@ -75,11 +73,10 @@ class DetailedCOCOEvaluator(COCOEvaluator):
             return results
 
         try:
-            precision = coco_eval.eval['precision']  # shape [T, R, K, A, M]
+            precision = coco_eval.eval['precision']  # [T, R, K, A, M]
         except Exception:
             return results
 
-        # T=10 IoU thresholds, A=0 (all areas), M=-1 (maxDets=100)
         iou_thresholds = np.linspace(0.5, 0.95, 10)
         per_iou_ap = {}
         for t, iou in enumerate(iou_thresholds):
@@ -91,7 +88,6 @@ class DetailedCOCOEvaluator(COCOEvaluator):
         mean_ap = float(np.nanmean(list(per_iou_ap.values())))
         mar_100 = float(coco_eval.stats[8] * 100) if coco_eval.stats is not None else float('nan')
 
-        # Push into EventStorage (TensorBoard + metrics.json)
         try:
             storage = get_event_storage()
             for k, v in per_iou_ap.items():
@@ -99,7 +95,7 @@ class DetailedCOCOEvaluator(COCOEvaluator):
             storage.put_scalar('bbox/map50_95', mean_ap, smoothing_hint=False)
             storage.put_scalar('bbox/mar100', mar_100, smoothing_hint=False)
         except AssertionError:
-            pass  # no active storage (standalone eval)
+            pass
 
         results.update(per_iou_ap)
         results['map50_95'] = mean_ap
@@ -114,6 +110,44 @@ class DetailedCOCOEvaluator(COCOEvaluator):
         return results
 
 
+class _EarlyStopSignal(BaseException):
+    """Inherits BaseException so Detectron2's `except Exception` logger is bypassed,
+    but `finally: after_train()` still runs to save model_final.pth."""
+    pass
+
+
+class EarlyStoppingHook(HookBase):
+    """Stop training when bbox/map50_95 has not improved for `patience` evals."""
+    def __init__(self, eval_period: int, patience: int, metric: str = 'bbox/map50_95'):
+        self._eval_period = eval_period
+        self._patience = patience
+        self._metric = metric
+        self._best = float('-inf')
+        self._no_improve = 0
+
+    def after_step(self):
+        next_iter = self.trainer.iter + 1
+        if next_iter % self._eval_period != 0:
+            return
+
+        try:
+            val = self.trainer.storage.history(self._metric).latest()
+        except (KeyError, AttributeError):
+            return
+
+        if val > self._best:
+            self._best = val
+            self._no_improve = 0
+        else:
+            self._no_improve += 1
+            epoch = next_iter // self._eval_period
+            print(f'[EarlyStopping] No improvement for {self._no_improve}/{self._patience} '
+                  f'epochs (best {self._metric}: {self._best:.3f})')
+            if self._no_improve >= self._patience:
+                print(f'[EarlyStopping] Patience exhausted at epoch {epoch}. Stopping.')
+                raise _EarlyStopSignal()
+
+
 class CocoTrainer(DefaultTrainer):
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
@@ -124,8 +158,6 @@ class CocoTrainer(DefaultTrainer):
 
     def build_hooks(self):
         hooks = super().build_hooks()
-        # Track best checkpoint by mAP@0.5:0.95 (pushed to storage by DetailedCOCOEvaluator).
-        # Insert after eval hook so the metric is in EventStorage when this runs.
         best_hook = BestCheckpointer(
             eval_period=self.cfg.TEST.EVAL_PERIOD,
             checkpointer=self.checkpointer,
@@ -137,7 +169,15 @@ class CocoTrainer(DefaultTrainer):
         return hooks
 
 
-def build_cfg(train_datasets, val_datasets, output_dir, epochs, ims_per_batch, base_lr, num_workers, model_config):
+def is_retinanet(model_config: str) -> bool:
+    return 'retinanet' in model_config.lower()
+
+
+def is_cascade(model_config: str) -> bool:
+    return 'cascade' in model_config.lower()
+
+
+def build_cfg(train_datasets, val_datasets, output_dir, epochs, num_workers, model_config):
     cfg = get_cfg()
     cfg.merge_from_file(model_zoo.get_config_file(model_config))
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(model_config)
@@ -146,31 +186,43 @@ def build_cfg(train_datasets, val_datasets, output_dir, epochs, ims_per_batch, b
     cfg.DATASETS.TEST = tuple(val_datasets)
 
     cfg.DATALOADER.NUM_WORKERS = num_workers
-    cfg.SOLVER.IMS_PER_BATCH = ims_per_batch
-    cfg.SOLVER.BASE_LR = base_lr
 
-    # Convert epochs -> iterations
+    # Use default IMS_PER_BATCH from provider config to compute epoch length.
+    ims_per_batch = cfg.SOLVER.IMS_PER_BATCH
     num_train_imgs = count_train_images(train_datasets)
     iters_per_epoch = max(1, math.ceil(num_train_imgs / ims_per_batch))
+
     cfg.SOLVER.MAX_ITER = epochs * iters_per_epoch
-    # Rolling "latest" checkpoint every 10 epochs, keep only 1 (for resume safety).
-    # model_best.pth and model_final.pth are handled separately and NOT affected by MAX_TO_KEEP.
+    # Disable LR decay steps (constant LR as per experiment design).
+    cfg.SOLVER.STEPS = ()
+    # Rolling checkpoint every 10 epochs, keep only the latest 1.
     cfg.SOLVER.CHECKPOINT_PERIOD = 10 * iters_per_epoch
     cfg.SOLVER.MAX_TO_KEEP = 1
-    # Evaluate every epoch
+    # Evaluate every epoch.
     cfg.TEST.EVAL_PERIOD = iters_per_epoch
 
-    cfg.MODEL.ROI_HEADS.NUM_CLASSES = NUM_CLASSES
+    if is_retinanet(model_config):
+        cfg.MODEL.RETINANET.NUM_CLASSES = NUM_CLASSES
+    else:
+        cfg.MODEL.ROI_HEADS.NUM_CLASSES = NUM_CLASSES
+
+    # Cascade Mask R-CNN zoo config has a mask head; disable it since our
+    # dataset has no segmentation annotations.
+    if is_cascade(model_config):
+        cfg.MODEL.MASK_ON = False
+
     cfg.OUTPUT_DIR = output_dir
     os.makedirs(cfg.OUTPUT_DIR, exist_ok=True)
 
-    # Dump frozen config for provenance
     with open(os.path.join(cfg.OUTPUT_DIR, 'config.yaml'), 'w') as f:
         f.write(cfg.dump())
 
-    print(f'\nTraining images: {num_train_imgs}')
-    print(f'Iterations per epoch: {iters_per_epoch}')
-    print(f'Total iterations ({epochs} epochs): {cfg.SOLVER.MAX_ITER}')
+    print(f'\nModel:               {model_config}')
+    print(f'Default LR:          {cfg.SOLVER.BASE_LR}')
+    print(f'Default batch size:  {ims_per_batch}')
+    print(f'Training images:     {num_train_imgs}')
+    print(f'Iterations/epoch:    {iters_per_epoch}')
+    print(f'Total iterations:    {cfg.SOLVER.MAX_ITER}  ({epochs} epochs)')
     return cfg
 
 
@@ -179,8 +231,8 @@ def main():
     parser.add_argument('--train-folds', nargs='+', type=int, default=[1, 2, 3, 4])
     parser.add_argument('--val-folds', nargs='+', type=int, default=[5])
     parser.add_argument('--epochs', type=int, default=200)
-    parser.add_argument('--batch', type=int, default=8)
-    parser.add_argument('--lr', type=float, default=0.005)
+    parser.add_argument('--patience', type=int, default=20,
+                        help='Early stopping patience in epochs (0 = disabled)')
     parser.add_argument('--workers', type=int, default=4)
     parser.add_argument('--output-dir', type=str, default='output/detectron2_run')
     parser.add_argument('--model-config', type=str,
@@ -189,7 +241,6 @@ def main():
     parser.add_argument('--no-resume', action='store_true',
                         help='Disable auto-resume from existing checkpoints in output-dir')
     args = parser.parse_args()
-    # Resume by default if output-dir already has checkpoints
     resume = not args.no_resume
 
     print(f'Train folds: {args.train_folds}')
@@ -204,15 +255,22 @@ def main():
         val_datasets=val_names,
         output_dir=args.output_dir,
         epochs=args.epochs,
-        ims_per_batch=args.batch,
-        base_lr=args.lr,
         num_workers=args.workers,
         model_config=args.model_config,
     )
 
     trainer = CocoTrainer(cfg)
     trainer.resume_or_load(resume=resume)
-    trainer.train()
+
+    if args.patience > 0:
+        trainer.register_hooks([
+            EarlyStoppingHook(cfg.TEST.EVAL_PERIOD, args.patience)
+        ])
+
+    try:
+        trainer.train()
+    except _EarlyStopSignal:
+        pass
 
 
 if __name__ == '__main__':

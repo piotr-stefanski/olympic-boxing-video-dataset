@@ -13,10 +13,14 @@ dependencies = [
     "tensorboard>=2.20.0",
     "torch==2.1.2",
     "torchvision==0.16.2",
-    "ultralytics>=8.3.0",
+    "ultralytics>=8.4.40",
     "detectron2",
-    "numpy<2.0"
+    "numpy<2.0",
 ]
+
+[tool.uv]
+# Block opencv-python (GUI) so only opencv-python-headless is used (no libGL needed)
+override-dependencies = ["opencv-python>=0.0.0 ; sys_platform == 'never'"]
 
 [tool.uv.extra-build-dependencies]
 detectron2 = ["torch"]
@@ -29,4 +33,5 @@ explicit = true
 [tool.uv.sources]
 torch = { index = "pytorch-cu121" }
 torchvision = { index = "pytorch-cu121" }
-detectron2 = { path = "/net/tscratch/people/plgkamilkot/detectron2", editable = true }
+detectron2 = { path = "../detectron2", editable = true }
+

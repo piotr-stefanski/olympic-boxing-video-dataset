@@ -1,0 +1,33 @@
+# Space-separated columns:
+#   run_name  train_folds(comma)  val_folds(comma)  model_weights
+# Lines starting with # and blank lines are ignored.
+# Scenarios: Q1 S1-S4, Q2 S1-S3 (Q2-S4 == Q1-S4, deduplicated).
+# 3 models x 7 scenarios = 21 runs total.
+# Submit with: sbatch --array=0-20%4 scripts/ultralytics/train_array.sbatch
+
+# --- YOLOv8m ---
+q1_s1_yolov8m  1        5        yolov8m.pt
+q1_s2_yolov8m  1,2      5        yolov8m.pt
+q1_s3_yolov8m  1,2,3    5        yolov8m.pt
+q1_s4_yolov8m  1,2,3,4  5        yolov8m.pt
+q2_s1_yolov8m  1        2,3,4,5  yolov8m.pt
+q2_s2_yolov8m  1,2      3,4,5    yolov8m.pt
+q2_s3_yolov8m  1,2,3    4,5      yolov8m.pt
+
+# --- YOLO11m ---
+q1_s1_yolo11m  1        5        yolo11m.pt
+q1_s2_yolo11m  1,2      5        yolo11m.pt
+q1_s3_yolo11m  1,2,3    5        yolo11m.pt
+q1_s4_yolo11m  1,2,3,4  5        yolo11m.pt
+q2_s1_yolo11m  1        2,3,4,5  yolo11m.pt
+q2_s2_yolo11m  1,2      3,4,5    yolo11m.pt
+q2_s3_yolo11m  1,2,3    4,5      yolo11m.pt
+
+# --- RT-DETR-l ---
+q1_s1_rtdetr   1        5        rtdetr-l.pt
+q1_s2_rtdetr   1,2      5        rtdetr-l.pt
+q1_s3_rtdetr   1,2,3    5        rtdetr-l.pt
+q1_s4_rtdetr   1,2,3,4  5        rtdetr-l.pt
+q2_s1_rtdetr   1        2,3,4,5  rtdetr-l.pt
+q2_s2_rtdetr   1,2      3,4,5    rtdetr-l.pt
+q2_s3_rtdetr   1,2,3    4,5      rtdetr-l.pt

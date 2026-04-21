@@ -1,32 +1,30 @@
 #!/bin/bash
-#SBATCH --job-name=boxing-array
+#SBATCH --job-name=boxing-yolo-array
 #SBATCH --partition=plgrid-gpu-a100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=12
 #SBATCH --gpus=1
 #SBATCH --time=48:00:00
-# Bootstrap log: only the few lines before we know OUTPUT_DIR land here.
-# After the exec redirect below, all output goes to runs/<run_name>/slurm_<jobid>.log
+# Bootstrap log; after exec redirect all output goes to runs/<run_name>/slurm_<jobid>.log
 #SBATCH --output=runs/_array_bootstrap/%x_%A_%a.log
 #SBATCH --error=runs/_array_bootstrap/%x_%A_%a.log
-# NOTE: set --array=0-N%K when submitting, e.g.:
-#   sbatch --array=0-6%4 scripts/train_array.sbatch
-# where N = (num non-comment lines in experiments.txt) - 1
-# and K = max concurrent jobs (start with 4).
+# NOTE: set --array=0-20%K when submitting, e.g.:
+#   sbatch --array=0-20%4 scripts/ultralytics/train_array.sbatch
+# where K = max concurrent jobs (start with 4).
 
 export PYTHONUNBUFFERED=1
 export PYTHONUTF8=1
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
-export UV_CACHE_DIR=/net/tscratch/people/plgkamilkot/.cache/uv
+export UV_CACHE_DIR=/net/tscratch/people/$USER/.cache/uv
 
 module load CUDA/12.1.1
 
 cd $SLURM_SUBMIT_DIR
 mkdir -p runs/_array_bootstrap
 
-EXPERIMENTS_FILE="scripts/experiments.txt"
+EXPERIMENTS_FILE="scripts/ultralytics/experiments.txt"
 
 # Pick the (TASK_ID+1)-th non-comment, non-blank line
 LINE=$(grep -v '^\s*#' "$EXPERIMENTS_FILE" | grep -v '^\s*$' | sed -n "$((SLURM_ARRAY_TASK_ID + 1))p")
@@ -35,10 +33,10 @@ if [ -z "$LINE" ]; then
     exit 1
 fi
 
-# Parse: run_name train_folds val_folds model_config
-read -r RUN_NAME TRAIN_FOLDS VAL_FOLDS MODEL_CONFIG <<< "$LINE"
+# Parse: run_name train_folds val_folds model_weights
+read -r RUN_NAME TRAIN_FOLDS VAL_FOLDS MODEL_WEIGHTS <<< "$LINE"
 
-OUTPUT_DIR="runs/${RUN_NAME}"
+OUTPUT_DIR="runs/${RUN_NAME}_${SLURM_JOB_ID}"
 mkdir -p "$OUTPUT_DIR"
 
 # Redirect everything from here on into the run dir
@@ -53,7 +51,7 @@ echo "Array task: $SLURM_ARRAY_TASK_ID"
 echo "Run name:   $RUN_NAME"
 echo "Train folds: $TRAIN_ARGS"
 echo "Val folds:   $VAL_ARGS"
-echo "Model:      $MODEL_CONFIG"
+echo "Model:      $MODEL_WEIGHTS"
 echo "Output dir: $OUTPUT_DIR"
 echo "Job ID:     $SLURM_JOB_ID"
 echo "Node:       $(hostname)"
@@ -71,14 +69,13 @@ GPU_MON_PID=$!
 done) > "${OUTPUT_DIR}/cpu_usage_${SLURM_JOB_ID}.log" 2>&1 &
 CPU_MON_PID=$!
 
-uv run --frozen python train_detectron2.py \
+uv run --frozen python ultralytics/train_ultralytics.py \
     --train-folds $TRAIN_ARGS \
     --val-folds $VAL_ARGS \
-    --epochs 50 \
-    --batch 16 \
-    --lr 0.01 \
+    --epochs 200 \
+    --patience 20 \
     --workers 10 \
     --output-dir "$OUTPUT_DIR" \
-    --model-config "$MODEL_CONFIG"
+    --model "$MODEL_WEIGHTS"
 
 kill $GPU_MON_PID $CPU_MON_PID 2>/dev/null
