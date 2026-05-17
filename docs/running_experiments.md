@@ -33,19 +33,19 @@ export UV_CACHE_DIR=/net/tscratch/people/$USER/.cache/uv
 cd /net/tscratch/people/$USER/olympic-boxing-video-dataset
 
 # Faster R-CNN
-uv run --frozen python detectron2/train_detectron2.py \
+uv run --frozen python experiments/detectron2/train_detectron2.py \
     --train-folds 1 --val-folds 5 --epochs 3 --patience 2 \
     --workers 4 --output-dir runs/smoke_faster_rcnn \
     --model-config COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml
 
 # Cascade R-CNN
-uv run --frozen python detectron2/train_detectron2.py \
+uv run --frozen python experiments/detectron2/train_detectron2.py \
     --train-folds 1 --val-folds 5 --epochs 3 --patience 2 \
     --workers 4 --output-dir runs/smoke_cascade_rcnn \
     --model-config Misc/cascade_mask_rcnn_R_50_FPN_3x.yaml
 
 # RetinaNet
-uv run --frozen python detectron2/train_detectron2.py \
+uv run --frozen python experiments/detectron2/train_detectron2.py \
     --train-folds 1 --val-folds 5 --epochs 3 --patience 2 \
     --workers 4 --output-dir runs/smoke_retinanet \
     --model-config COCO-Detection/retinanet_R_50_FPN_3x.yaml
@@ -55,13 +55,13 @@ uv run --frozen python detectron2/train_detectron2.py \
 
 ```bash
 # Runs row 0 only (q1_s1_faster_rcnn), confirms log redirection + GPU monitoring
-sbatch --array=0-0%1 scripts/detectron2/train_array.sbatch
+sbatch --array=0-0%1 experiments/detectron2/train_array.sbatch
 ```
 
 ### Full 21-run array
 
 ```bash
-sbatch --array=0-20%4 scripts/detectron2/train_array.sbatch
+sbatch --array=0-20%4 experiments/detectron2/train_array.sbatch
 ```
 
 `%4` = max 4 concurrent jobs. Adjust with:
@@ -73,7 +73,7 @@ scontrol update JobId=<array_jobid> ArrayTaskThrottle=8
 
 ```bash
 cd /net/tscratch/people/$USER/olympic-boxing-video-dataset
-python scripts/detectron2/collect_results.py
+python experiments/detectron2/collect_results.py
 # Output: results.csv
 ```
 
@@ -86,7 +86,7 @@ python scripts/detectron2/collect_results.py
 Must be done once before any training. Converts all 5 COCO folds to YOLO format:
 
 ```bash
-uv run --frozen python ultralytics/convert_coco_to_yolo.py
+uv run --frozen python data-preparation/convert_coco_to_yolo.py
 # Output: datasets/olympic-boxing-video-dataset/yolo_dataset/images/fold_1..5/
 #         datasets/olympic-boxing-video-dataset/yolo_dataset/labels/fold_1..5/
 ```
@@ -101,7 +101,7 @@ module load CUDA/12.1.1
 export UV_CACHE_DIR=/net/tscratch/people/$USER/.cache/uv
 cd /net/tscratch/people/$USER/olympic-boxing-video-dataset
 
-uv run --frozen python ultralytics/train_ultralytics.py \
+uv run --frozen python experiments/ultralytics/train_ultralytics.py \
     --train-folds 1 --val-folds 5 \
     --epochs 3 --patience 2 --workers 4 \
     --output-dir runs/smoke_yolov8m \
@@ -110,11 +110,11 @@ uv run --frozen python ultralytics/train_ultralytics.py \
 
 ### Smoke test — via SLURM (3 models, 1 scenario each)
 
-Edit `scripts/ultralytics/experiments.txt` to keep only the first row of each model block,
+Edit `experiments/ultralytics/experiments.txt` to keep only the first row of each model block,
 set `--epochs 5 --patience 1` in `train_array.sbatch`, then:
 
 ```bash
-sbatch --array=0-2%3 scripts/ultralytics/train_array.sbatch
+sbatch --array=0-2%3 experiments/ultralytics/train_array.sbatch
 ```
 
 Restore epochs/patience afterwards.
@@ -122,14 +122,14 @@ Restore epochs/patience afterwards.
 ### Full 21-run array
 
 ```bash
-sbatch --array=0-20%4 scripts/ultralytics/train_array.sbatch
+sbatch --array=0-20%4 experiments/ultralytics/train_array.sbatch
 ```
 
 ### Collect results
 
 ```bash
 cd /net/tscratch/people/$USER/olympic-boxing-video-dataset
-python scripts/ultralytics/collect_results.py
+python experiments/ultralytics/collect_results.py
 # Output: results_ultralytics.csv
 ```
 

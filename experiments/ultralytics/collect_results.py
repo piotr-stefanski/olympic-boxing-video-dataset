@@ -7,8 +7,8 @@ Per-IoU metrics (map50..map95) are read from per_iou_metrics.json when present
 Best epoch is the one with the highest metrics/mAP50-95(B).
 
 Usage:
-    python scripts/ultralytics/collect_results.py
-    python scripts/ultralytics/collect_results.py --runs-dir runs --output results_ultralytics.csv
+    python experiments/ultralytics/collect_results.py
+    python experiments/ultralytics/collect_results.py --runs-dir runs --output results_ultralytics.csv
 """
 import argparse
 import csv

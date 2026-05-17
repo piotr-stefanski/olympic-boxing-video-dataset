@@ -3,7 +3,7 @@
 # Lines starting with # and blank lines are ignored.
 # Scenarios: Q1 S1-S4, Q2 S1-S3 (Q2-S4 == Q1-S4, deduplicated).
 # 3 models x 7 scenarios = 21 runs total.
-# Submit with: sbatch --array=0-20%4 scripts/train_array.sbatch
+# Submit with: sbatch --array=0-20%4 experiments/detectron2/train_array.sbatch
 
 # --- Faster R-CNN R50-FPN (default LR=0.02, batch=16) ---
 q1_s1_faster_rcnn  1        5        COCO-Detection/faster_rcnn_R_50_FPN_3x.yaml

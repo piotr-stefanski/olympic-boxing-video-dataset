@@ -11,8 +11,8 @@ Columns written per run:
   best_map50 .. best_map50_95, best_mar100
 
 Usage:
-    python scripts/detectron2/collect_results.py
-    python scripts/detectron2/collect_results.py --runs-dir runs --out results.csv
+    python experiments/detectron2/collect_results.py
+    python experiments/detectron2/collect_results.py --runs-dir runs --out results.csv
 """
 import argparse
 import csv

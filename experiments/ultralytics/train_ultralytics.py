@@ -7,20 +7,21 @@ arguments, so the same yolo_dataset/ can serve all 7 cross-validation
 scenarios without data duplication.
 
 Usage:
-    uv run python ultralytics/train_ultralytics.py --model yolov8m.pt
-    uv run python ultralytics/train_ultralytics.py \\
+    uv run --frozen python experiments/ultralytics/train_ultralytics.py --model yolov8m.pt
+    uv run --frozen python experiments/ultralytics/train_ultralytics.py \\
         --train-folds 1 2 3 4 --val-folds 5 --model yolo11m.pt
 """
 import argparse
 import json
 import os
+import sys
 
 import yaml
 from ultralytics import YOLO
 
-from convert_coco_to_yolo import convert_fold, DATASET_DIR as _DEFAULT_DATASET_DIR
-
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.normpath(os.path.join(_SCRIPT_DIR, '../../data-preparation')))
+from convert_coco_to_yolo import convert_fold, DATASET_DIR as _DEFAULT_DATASET_DIR
 
 _IOU_LABELS = [50, 55, 60, 65, 70, 75, 80, 85, 90, 95]
 

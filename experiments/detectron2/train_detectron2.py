@@ -6,9 +6,9 @@ Only sets NUM_CLASSES, DATASETS, OUTPUT_DIR, MAX_ITER, EVAL_PERIOD,
 CHECKPOINT_PERIOD, and disables SOLVER.STEPS for a constant LR schedule.
 
 Usage:
-    uv run train_detectron2.py
-    uv run train_detectron2.py --train-folds 1 2 3 4 --val-folds 5
-    uv run train_detectron2.py --model-config COCO-Detection/retinanet_R_50_FPN_3x.yaml
+    uv run --frozen python experiments/detectron2/train_detectron2.py
+    uv run --frozen python experiments/detectron2/train_detectron2.py --train-folds 1 2 3 4 --val-folds 5
+    uv run --frozen python experiments/detectron2/train_detectron2.py --model-config COCO-Detection/retinanet_R_50_FPN_3x.yaml
 """
 import argparse
 import os
@@ -27,10 +27,10 @@ from detectron2.utils.events import get_event_storage
 
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATASET_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, '../../datasets/olympic-boxing-video-dataset'))
+DATASET_DIR = os.path.normpath(os.path.join(_SCRIPT_DIR, '../../../datasets/olympic-boxing-video-dataset'))
 IMAGES_DIR = os.path.join(DATASET_DIR, 'coco_images')
 ANNOTATIONS_DIR = os.path.join(DATASET_DIR, 'annotations')
-NUM_CLASSES = 8  # boxing action categories (see data-utils/config.py)
+NUM_CLASSES = 8  # boxing action categories (see data-preparation/config.py)
 
 
 def register_folds(fold_numbers: list[int], split_name: str) -> list[str]:

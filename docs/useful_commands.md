@@ -61,8 +61,8 @@ ssh -L 6010:localhost:6010 <USERNAME>@athena.cyfronet.pl
 
 ```bash
 # Detectron2
-python scripts/detectron2/collect_results.py
+python experiments/detectron2/collect_results.py
 
 # Ultralytics
-python scripts/ultralytics/collect_results.py
+python experiments/ultralytics/collect_results.py
 ```

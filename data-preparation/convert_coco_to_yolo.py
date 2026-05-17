@@ -8,8 +8,8 @@ Output structure under yolo_dataset/:
     ...
 
 Run once before training:
-    uv run python ultralytics/convert_coco_to_yolo.py
-    uv run python ultralytics/convert_coco_to_yolo.py --folds 1 2 3 4 5
+    uv run --frozen python data-preparation/convert_coco_to_yolo.py
+    uv run --frozen python data-preparation/convert_coco_to_yolo.py --folds 1 2 3 4 5
 """
 import json
 import os
