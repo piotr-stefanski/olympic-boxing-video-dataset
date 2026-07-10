@@ -3,8 +3,35 @@ name = "olympic-boxing-video-dataset"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10,<3.12"
 dependencies = [
     "gdown>=5.2.0",
-    "opencv-python-headless>=4.12.0.88",
+    "matplotlib>=3.10.8",
+    "opencv-python-headless<4.12",
+    "pycocotools>=2.0.11",
+    "setuptools<81",
+    "tensorboard>=2.20.0",
+    "torch==2.1.2",
+    "torchvision==0.16.2",
+    "ultralytics>=8.4.40",
+    "detectron2",
+    "numpy<2.0",
 ]
+
+[tool.uv]
+# Block opencv-python (GUI) so only opencv-python-headless is used (no libGL needed)
+override-dependencies = ["opencv-python>=0.0.0 ; sys_platform == 'never'"]
+
+[tool.uv.extra-build-dependencies]
+detectron2 = ["torch"]
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu121" }
+torchvision = { index = "pytorch-cu121" }
+detectron2 = { path = "../detectron2", editable = true }
+
